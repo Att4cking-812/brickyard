@@ -199,6 +199,31 @@
   footer{border-top:1px solid var(--line); padding:28px 0; color:var(--muted); font-size:13px}
   .foot{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap}
 
+  /* появление при скролле */
+  .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1; transform:translateY(0)}
+
+  .glow{animation:floaty 14s ease-in-out infinite}
+  .g2{animation-duration:19s; animation-direction:reverse}
+  @keyframes floaty{
+    0%,100%{transform:translate(0,0)}
+    50%{transform:translate(26px,-20px)}
+  }
+
+  #toTop{
+    position:fixed; right:26px; bottom:26px; width:46px; height:46px; border-radius:14px;
+    border:1px solid var(--line); background:rgba(20,13,28,.85); color:var(--text); font-size:20px;
+    cursor:pointer; opacity:0; pointer-events:none; transition:.25s; backdrop-filter:blur(8px); z-index:20;
+  }
+  #toTop.show{opacity:1; pointer-events:auto}
+  #toTop:hover{transform:translateY(-3px); border-color:rgba(192,42,85,.55); color:var(--gold)}
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1 !important; transform:none !important}
+    .glow{animation:none}
+    html{scroll-behavior:auto}
+  }
+
   @media (max-width:900px){
     .hero{grid-template-columns:1fr; gap:34px}
     h1{font-size:46px}
@@ -345,6 +370,8 @@
   </div>
 </footer>
 
+<button id="toTop" aria-label="Наверх">↑</button>
+
 <script>
   const INVITE = 'https://discord.gg/nWAATWnnnJ';
 
@@ -428,6 +455,36 @@
     a.target = '_blank';
     a.rel = 'noopener';
   });
+
+  // ---------- анимации появления ----------
+  const revealEls = Array.from(document.querySelectorAll('.shead, .feat, .rcard, .chips, .join, .card, .rulefoot'));
+  revealEls.forEach((el, i) => {
+    el.classList.add('reveal');
+    el.style.transitionDelay = `${(i % 5) * 70}ms`;
+  });
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('in'));
+  }
+
+  // ---------- кнопка наверх ----------
+  const toTop = document.getElementById('toTop');
+  if (toTop) {
+    const onScroll = () => toTop.classList.toggle('show', window.scrollY > 600);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
 </script>
 </body>
 </html>
