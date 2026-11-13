@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/webp" href="https://cdn.discordapp.com/icons/1445726117007720501/b53229c8c497ffee680dd7ea71f3f386.webp?size=64">
+<title>Brickyard — Discord-сервер</title>
+<style>
+  :root{
+    --wine:#8e1b3a;
+    --wine2:#c02a55;
+    --gold:#f0c060;
+    --bg:#0a0710;
+    --panel:#140d1c;
+    --text:#f2e9f4;
+    --muted:#a08fa8;
+    --line:#2a1b34;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--text); font-family:"Segoe UI",system-ui,sans-serif;
+    overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none}
+
+  /* фон */
+  .bg{position:fixed; inset:0; z-index:-2; background:
+    radial-gradient(900px 500px at 15% -10%, rgba(192,42,85,.28), transparent 60%),
+    radial-gradient(800px 500px at 90% 10%, rgba(142,27,58,.25), transparent 55%),
+    radial-gradient(700px 600px at 50% 110%, rgba(240,192,96,.10), transparent 60%),
+    var(--bg);
+  }
+  .bg::after{
+    content:""; position:absolute; inset:0; opacity:.35;
+    background-image:linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+                     linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(circle at 50% 30%, #000 0%, transparent 75%);
+  }
+  .glow{position:fixed; width:420px; height:420px; border-radius:50%; filter:blur(90px); z-index:-1; opacity:.5}
+  .g1{background:#c02a55; top:-140px; left:-120px}
+  .g2{background:#f0c060; bottom:-160px; right:-120px; opacity:.25}
+
+  .wrap{max-width:1120px; margin:0 auto; padding:0 24px}
+
+  /* nav */
+  nav{
+    position:sticky; top:0; z-index:10; backdrop-filter:blur(14px);
+    background:rgba(10,7,16,.72); border-bottom:1px solid var(--line);
+  }
+  .nav-in{display:flex; align-items:center; justify-content:space-between; height:70px}
+  .brand{display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.5px}
+  .logo{
+    width:38px; height:38px; border-radius:12px; display:grid; place-items:center;
+    background:linear-gradient(145deg,var(--wine2),var(--wine)); font-size:20px;
+    box-shadow:0 0 24px rgba(192,42,85,.45); object-fit:cover;
+  }
+  .nav-links{display:flex; gap:26px; font-size:14px; color:var(--muted)}
+  .nav-links a{position:relative; padding-bottom:4px; transition:color .18s ease}
+  .nav-links a::after{
+    content:""; position:absolute; left:0; bottom:0; height:2px; width:0;
+    background:linear-gradient(90deg,var(--wine2),var(--gold));
+    transition:width .22s ease; border-radius:2px;
+  }
+  .nav-links a:hover{color:var(--text)}
+  .nav-links a:hover::after{width:100%}
+  .btn{
+    display:inline-flex; align-items:center; gap:9px; padding:12px 22px; border-radius:12px;
+    font-weight:700; font-size:14px; border:1px solid transparent; transition:.2s; cursor:pointer;
+  }
+  .btn-main{background:linear-gradient(180deg,var(--wine2),var(--wine)); color:#fff;
+    box-shadow:0 10px 30px rgba(192,42,85,.35)}
+  .btn-main:hover{transform:translateY(-2px); box-shadow:0 14px 36px rgba(192,42,85,.5)}
+  .btn-ghost{border-color:var(--line); color:var(--text); background:rgba(255,255,255,.03)}
+  .btn-ghost:hover{background:rgba(255,255,255,.07)}
+
+  /* hero */
+  header{padding:88px 0 70px; position:relative}
+  .hero{display:grid; grid-template-columns:1.15fr .85fr; gap:56px; align-items:center}
+  .pill{
+    display:inline-flex; align-items:center; gap:8px; font-size:12px; letter-spacing:1.2px;
+    text-transform:uppercase; color:var(--gold); border:1px solid rgba(240,192,96,.25);
+    padding:7px 14px; border-radius:99px; background:rgba(240,192,96,.06); margin-bottom:22px;
+  }
+  .dot{width:7px; height:7px; border-radius:50%; background:#59f28f; box-shadow:0 0 10px #59f28f}
+  h1{font-size:64px; line-height:1.03; letter-spacing:-1.5px}
+  h1 .grad{
+    background:linear-gradient(100deg,var(--wine2),var(--gold));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .lead{color:var(--muted); font-size:17px; line-height:1.7; max-width:520px; margin:22px 0 30px}
+  .cta{display:flex; gap:14px; flex-wrap:wrap}
+
+  /* card */
+  .card{
+    background:linear-gradient(160deg,rgba(30,18,40,.9),rgba(14,9,20,.95));
+    border:1px solid var(--line); border-radius:22px; padding:26px;
+    box-shadow:0 30px 80px rgba(0,0,0,.55);
+  }
+  .card h3{font-size:13px; text-transform:uppercase; letter-spacing:1.4px; color:var(--muted); margin-bottom:18px}
+  .stat{display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px dashed var(--line)}
+  .stat:last-child{border:0}
+  .stat b{font-size:18px}
+  .avatars{display:flex; margin-top:18px}
+  .av{
+    width:36px; height:36px; border-radius:50%; margin-left:-9px; border:2px solid #140d1c;
+    background:linear-gradient(145deg,#3a2346,#221530); display:grid; place-items:center; font-size:13px;
+  }
+  .av:first-child{margin-left:0}
+  .av.more{background:#24172f; color:var(--muted); font-size:12px}
+
+  /* sections */
+  section{padding:74px 0}
+  .shead{margin-bottom:34px}
+  .shead span{font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--wine2)}
+  .shead h2{font-size:36px; margin-top:10px; letter-spacing:-.5px}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+  .feat{
+    background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:24px;
+    transition:.25s;
+  }
+  .feat:hover{transform:translateY(-4px); border-color:rgba(192,42,85,.45)}
+  .ico{
+    width:44px; height:44px; border-radius:12px; display:grid; place-items:center; font-size:20px;
+    background:rgba(192,42,85,.14); border:1px solid rgba(192,42,85,.25); margin-bottom:16px;
+  }
+  .feat h3{font-size:17px; margin-bottom:8px}
+  .feat p{color:var(--muted); font-size:14px; line-height:1.6}
+
+  .rules{counter-reset:r; display:grid; gap:12px}
+  .rulegrid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px}
+  .rcard{
+    background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:20px 22px;
+    transition:.2s;
+  }
+  .rcard:hover{border-color:rgba(192,42,85,.4)}
+  .rcard h3{font-size:16px; margin-bottom:12px; color:#f0d9e6; display:flex; gap:8px; align-items:center}
+  .ritem{display:flex; gap:10px; padding:7px 0; border-bottom:1px dashed rgba(255,255,255,.05)}
+  .ritem:last-child{border-bottom:0}
+  .rnum{color:var(--wine2); font-weight:700; font-size:13px; flex:0 0 auto; padding-top:1px}
+  .rtext{color:#cbbccf; font-size:14px; line-height:1.5}
+  .punish{
+    display:inline-block; margin-left:6px; padding:1px 8px; border-radius:6px;
+    background:rgba(240,192,96,.10); border:1px solid rgba(240,192,96,.22);
+    color:var(--gold); font-size:12px; white-space:nowrap;
+  }
+  .rulefoot{
+    margin-top:20px; padding:16px 20px; border-radius:14px; font-size:13px; line-height:1.6;
+    color:var(--muted); background:rgba(192,42,85,.07); border:1px solid rgba(192,42,85,.18);
+  }
+  @media (max-width:900px){ .rulegrid{grid-template-columns:1fr} }
+  .rule{
+    counter-increment:r; display:flex; gap:16px; align-items:flex-start;
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px 20px;
+  }
+  .rule::before{
+    content:counter(r); flex:0 0 30px; height:30px; border-radius:9px; display:grid; place-items:center;
+    background:rgba(240,192,96,.12); color:var(--gold); font-weight:800; font-size:14px;
+  }
+  .rule p{color:#d9cbdd; font-size:15px; line-height:1.55; padding-top:4px}
+
+  .chips{display:flex; flex-wrap:wrap; gap:10px}
+  .chip{
+    padding:9px 15px; border-radius:10px; font-size:14px; color:#d9cbdd;
+    background:var(--panel); border:1px solid var(--line);
+    transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+    will-change:transform; cursor:default;
+  }
+  .chip b{color:var(--wine2); transition:color .18s ease}
+  .chip:hover{
+    transform:translateY(-4px);
+    border-color:rgba(192,42,85,.55);
+    background:rgba(192,42,85,.10);
+    box-shadow:0 10px 24px rgba(0,0,0,.45), 0 0 0 1px rgba(192,42,85,.18) inset;
+  }
+  .chip:hover b{color:var(--gold)}
+  .chip:active{transform:translateY(-1px) scale(.98)}
+
+  .join{
+    text-align:center; padding:60px 30px; border-radius:24px;
+    background:linear-gradient(160deg,rgba(192,42,85,.16),rgba(240,192,96,.05));
+    border:1px solid rgba(192,42,85,.3);
+  }
+  .join h2{font-size:40px; letter-spacing:-1px; margin-bottom:14px}
+  .join p{color:var(--muted); margin-bottom:26px}
+
+  footer{border-top:1px solid var(--line); padding:28px 0; color:var(--muted); font-size:13px}
+  .foot{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap}
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr; gap:34px}
+    h1{font-size:46px}
+    .grid3{grid-template-columns:1fr}
+    .nav-links{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="glow g1"></div>
+<div class="glow g2"></div>
+
+<nav>
+  <div class="wrap nav-in">
+    <div class="brand">
+      <img class="logo" src="https://cdn.discordapp.com/icons/1445726117007720501/b53229c8c497ffee680dd7ea71f3f386.webp?size=128" alt="Brickyard">
+      <div>BRICKYARD</div>
+    </div>
+    <div class="nav-links">
+      <a href="#about">О сервере</a>
+      <a href="#rules">Правила</a>
+      <a href="#channels">Каналы</a>
+    </div>
+    <a class="btn btn-main" href="#" data-invite>Присоединиться</a>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap hero">
+    <div>
+      <div class="pill"><span class="dot"></span> сервер живёт и дышит</div>
+      <h1>Твоё место<br>в <span class="grad">Brickyard</span></h1>
+      <p class="lead">
+        Уютный Discord-сервер для общения, игр и вечерних разговоров ни о чём.
+        Заходи, знакомься, оставайся — здесь всегда есть кто-то в голосовом.
+      </p>
+      <div class="cta">
+        <a class="btn btn-main" href="#" data-invite>🚪 Войти на сервер</a>
+        <a class="btn btn-ghost" href="#about">Узнать больше</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Сейчас на сервере</h3>
+      <div class="stat"><span>Участников</span><b>29 <span style="font-size:12px;color:#59f28f">11 online</span></b></div>
+      <div class="stat"><span>Голосовой канал</span><b style="color:#59f28f">● Огран. 1</b></div>
+      <div class="stat"><span>Оффлайн</span><b style="color:#a08fa8">18</b></div>
+      <div class="avatars">
+        <div class="av">🍷</div>
+        <div class="av">🎮</div>
+        <div class="av">🐱</div>
+        <div class="av">💩</div>
+        <div class="av more">+4</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="shead">
+      <span>почему мы</span>
+      <h2>Что здесь есть</h2>
+    </div>
+    <div class="grid3">
+      <div class="feat">
+        <div class="ico">💬</div>
+        <h3>Живое общение</h3>
+        <p>Текстовые каналы на любой вкус — от мемов до серьёзных разговоров. Без токсичности и «а кто ты такой».</p>
+      </div>
+      <div class="feat">
+        <div class="ico">🎮</div>
+        <h3>Игры вместе</h3>
+        <p>Minecraft, Roblox, Dota, Phasmophobia и всё, что зайдёт вечером. Сборы спонтанные, но регулярные.</p>
+      </div>
+      <div class="feat">
+        <div class="ico">🎧</div>
+        <h3>Голос 24/7</h3>
+        <p>Заходи в канал и просто сиди — кто-нибудь да подключится. Музыка, стримы и «AAAААА» в звуковой панели прилагаются.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="rules">
+  <div class="wrap">
+    <div class="shead">
+      <span>порядок</span>
+      <h2>Правила сервера</h2>
+    </div>
+    <div class="rulegrid" id="rulesGrid"></div>
+    <div class="rulefoot">
+      За нарушение правил администрация имеет право сама определить наказание — от преда или мута до бана.
+      Администрация также может выдать наказание по своему усмотрению, даже если нарушение не было зафиксировано.
+      По всем вопросам наказаний обращайтесь к <b>@дота 2 не ориг</b> или модерам.
+      Незнание правил не освобождает от ответственности.
+    </div>
+  </div>
+</section>
+
+<section id="channels">
+  <div class="wrap">
+    <div class="shead">
+      <span>навигация</span>
+      <h2>Куда зайти первым делом</h2>
+    </div>
+    <div class="chips">
+      <div class="chip"><b>#</b> навигация</div>
+      <div class="chip"><b>#</b> правила</div>
+      <div class="chip"><b>#</b> новости</div>
+      <div class="chip"><b>#</b> опросы</div>
+      <div class="chip"><b>#</b> анонсы</div>
+      <div class="chip"><b>#</b> сервера</div>
+      <div class="chip"><b>#</b> чат</div>
+      <div class="chip"><b>#</b> вопросы</div>
+      <div class="chip"><b>#</b> предложка</div>
+      <div class="chip"><b>#</b> творчество</div>
+      <div class="chip"><b>#</b> команды</div>
+      <div class="chip"><b>#</b> мемы</div>
+      <div class="chip"><b>#</b> фотогалерея</div>
+      <div class="chip"><b>🔊</b> Огран. 1</div>
+      <div class="chip"><b>🔊</b> Общий</div>
+      <div class="chip"><b>🔊</b> Музыка</div>
+      <div class="chip"><b>🔊</b> AFK</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="join">
+      <h2>Заходи, не стесняйся</h2>
+      <p>Один клик — и ты уже внутри. Дальше просто скажи «привет».</p>
+      <a class="btn btn-main" href="#" data-invite>Присоединиться к Brickyard</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div>© Brickyard · сделано с 🍷 и небольшим количеством кода</div>
+    <div>Discord · Minecraft · вечерние разговоры</div>
+  </div>
+</footer>
+
+<script>
+  const INVITE = 'https://discord.gg/nWAATWnnnJ';
+
+  const RULES = [
+    { title: '🤬 Маты', items: [
+      { n: '1.2', t: 'Использование матов в оскорбительной форме.', p: '30мин / 1ч / 1ч 30мин' }
+    ]},
+    { title: '🌀 Спам и флуд', items: [
+      { n: '2.1', t: 'Спам (множественная отправка одного и того же сообщения).', p: '1ч / 2ч' },
+      { n: '2.2', t: 'Флуд эмодзи/одинаковыми символами разрешён до 5 символов в одном сообщении.', p: '1ч' },
+      { n: '2.3', t: 'Больше двух реакций на одном сообщении от одного человека.', p: 'пред / роль без реакций' }
+    ]},
+    { title: '📣 Реклама', items: [
+      { n: '3.1', t: 'Реклама без разрешения администрации. Разрешена только с согласия админа — пиар отправляется ему в ЛС, он решает, публиковать ли в #новости.', p: '4ч / 5ч / кик' }
+    ]},
+    { title: '🔞 18+, NSFW и шок-контент', items: [
+      { n: '4.1', t: '18+, NSFW, шокирующий контент. Мы стараемся создать комфортные условия для каждого участника.', p: '10ч / 15ч' }
+    ]},
+    { title: '🏛 Политика', items: [
+      { n: '5.1', t: 'Упоминание/обсуждение политики запрещено.' },
+      { n: '5.2', t: 'Использование/упоминание нацистской Германии и её символики.', p: '30мин / 1ч 30мин / 100ч' }
+    ]},
+    { title: '🗣 Клевета и оскорбления', items: [
+      { n: '6.1', t: 'Оскорбления.', p: '1ч / 5ч / 11ч' },
+      { n: '6.2', t: 'Клевета, ложь, дезинформация и слухи об участнике сервера.', p: '3ч / 4ч 30мин / кик' }
+    ]},
+    { title: '🔔 Пинг', items: [
+      { n: '7.1', t: '@here разрешён по делу.' },
+      { n: '7.2', t: '@everyone разрешён исключительно по делу.' },
+      { n: '7.3', t: 'Пинг участников — с согласия участника либо в срочном случае.' },
+      { n: '7.4', t: 'Пинг ролей запрещён.' }
+    ]},
+    { title: '🥨 Сухарики', items: [
+      { n: '8.1', t: 'Я люблю сухарики.' },
+      { n: '8.2', t: 'Вы любите сухарики.' }
+    ]},
+    { title: '😈 Провокации', items: [
+      { n: '9.1', t: 'Провокации типа «пошёл ты куда-либо».', p: '1ч / 5ч / 10ч' },
+      { n: '9.2', t: 'Провокации типа «соси», «туда тебя» и подобное.', p: '30мин / 1ч 30мин / 2ч' },
+      { n: '9.3', t: 'Брать человека на слабо.', p: '30мин / 1ч' },
+      { n: '9.4', t: 'Прочие провокационные сообщения.', p: '1ч' }
+    ]},
+    { title: '💢 Буллинг', items: [
+      { n: '12.1', t: 'Оскорбление вкуса человека.', p: '45мин' },
+      { n: '12.2', t: 'Неконструктивная критика любого творчества.', p: '45мин' }
+    ]},
+    { title: '🎭 Обман', items: [
+      { n: '13.1', t: 'Ввод в заблуждение игроков сервера в любых проявлениях.' },
+      { n: '13.2', t: 'Обман участников на деньги.' }
+    ]},
+    { title: '🔒 Личная информация', items: [
+      { n: '14.1', t: 'Распространение личной информации о любом участнике сервера.', p: '50ч / кик' }
+    ]},
+    { title: '🎞 Гиф', items: [
+      { n: '15.1', t: 'Большое количество гиф расценивается как спам + флуд.', p: '2ч / 3ч' },
+      { n: '15.2', t: 'Гиф с NSFW/шок/травмирующим/сексуальным контентом, фразами «снизу», «последние слова» и т.п.', p: '3ч / 7ч / кик' }
+    ]},
+    { title: '🎧 Голосовые каналы', items: [
+      { n: '16.1', t: 'Чрезмерное использование саундпада (приложение или Discord).', p: 'ГЧ 30мин / 45мин' },
+      { n: '16.2', t: 'Шумы и крики, мешающие остальным.', p: 'ГЧ 1ч' },
+      { n: '16.3', t: 'Саундпад из стороннего приложения слишком громко.', p: 'ГЧ 1ч / 3ч / 5ч' },
+      { n: '16.4', t: 'Использование саундпада будучи килькой.', p: 'Бан' }
+    ]}
+  ];
+
+  const grid = document.getElementById('rulesGrid');
+  if (grid) {
+    grid.innerHTML = RULES.map(sec => `
+      <div class="rcard">
+        <h3>${sec.title}</h3>
+        ${sec.items.map(it => `
+          <div class="ritem">
+            <div class="rnum">${it.n}</div>
+            <div class="rtext">${it.t}${it.p ? `<span class="punish">${it.p}</span>` : ''}</div>
+          </div>`).join('')}
+      </div>`).join('');
+  }
+
+  document.querySelectorAll('[data-invite]').forEach(a => {
+    a.href = INVITE;
+    a.target = '_blank';
+    a.rel = 'noopener';
+  });
+</script>
+</body>
+</html>
