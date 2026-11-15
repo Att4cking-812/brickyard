@@ -253,6 +253,7 @@
       <a href="#about">О сервере</a>
       <a href="#rules">Правила</a>
       <a href="#channels">Каналы</a>
+      <a href="#arcade">Поиграть</a>
     </div>
     <a class="btn btn-main" href="#" data-invite>Присоединиться</a>
   </div>
@@ -276,7 +277,7 @@
     <div class="card">
       <h3>Сейчас на сервере</h3>
       <div class="stat"><span>Участников</span><b><span id="statMembers">29</span> <span id="statOnline" style="font-size:12px;color:#59f28f">11 online</span></b></div>
-      <div class="stat"><span>Голосовой канал</span><b style="color:#59f28f">● в Discord</b></div>
+      <div class="stat"><span>Голосовой канал</span><b style="color:#59f28f">● 24/7</b></div>
       <div class="stat"><span>Оффлайн</span><b style="color:#a08fa8"><span id="statOffline">18</span></b></div>
       <div class="avatars">
         <div class="av">🍷</div>
@@ -528,28 +529,41 @@
   }
 
   // ---------- живые статы Discord ----------
+  // Discord-инвайт считает и ботов, поэтому вычитаем нашего бота из итогов.
+  const BOT_COUNT = 1;
   (async () => {
     const note = document.getElementById('statsNote');
-    try {
-      const code = INVITE.split('/').pop();
-      const res = await fetch(`https://discord.com/api/v10/invites/${code}?with_counts=true`, { cache: 'no-store' });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
-      const members = Number(data.approximate_member_count) || 0;
-      const online = Number(data.approximate_presence_count) || 0;
-      const offline = Math.max(0, members - online);
-      const set = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = value;
-      };
-      set('statMembers', members);
-      set('statOnline', online + ' online');
-      set('statOffline', offline);
-      set('statMore', '+' + Math.max(0, members - 4));
-      if (note) note.textContent = 'данные Discord · обновляются автоматически';
-    } catch (e) {
-      if (note) note.textContent = 'данные на 14.11.2026';
-    }
+    const set = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    };
+
+    const update = async () => {
+      try {
+        const code = INVITE.split('/').pop();
+        const res = await fetch(`https://discord.com/api/v10/invites/${code}?with_counts=true`, { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        const totalRaw = Number(data.approximate_member_count) || 0;
+        const onlineRaw = Number(data.approximate_presence_count) || 0;
+        const members = Math.max(0, totalRaw - BOT_COUNT);
+        const online = Math.min(members, Math.max(0, onlineRaw - BOT_COUNT));
+        const offline = Math.max(0, members - online);
+        set('statMembers', members);
+        set('statOnline', online + ' online');
+        set('statOffline', offline);
+        set('statMore', '+' + Math.max(0, members - 4));
+        if (note) {
+          const t = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+          note.textContent = 'данные Discord без ботов · обновлено в ' + t;
+        }
+      } catch (e) {
+        if (note) note.textContent = 'данные на 14.11.2026';
+      }
+    };
+
+    update();
+    setInterval(update, 300000);
   })();
 </script>
 </body>
