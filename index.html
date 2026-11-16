@@ -156,23 +156,6 @@
   .people-note a{color:var(--wine2); font-weight:700}
   .people-note a:hover{color:var(--gold)}
 
-  /* галерея */
-  .gallery{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
-  .shot{
-    position:relative; display:block; aspect-ratio:1/1; overflow:hidden; border-radius:18px;
-    border:1px solid var(--line); background:#0d0813; cursor:zoom-in;
-  }
-  .shot img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .35s ease, filter .35s ease}
-  .shot::after{
-    content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 45%,rgba(10,7,16,.85));
-    opacity:.75; transition:opacity .25s ease;
-  }
-  .shot span{
-    position:absolute; left:16px; bottom:14px; z-index:1; font-size:13px; font-weight:700; letter-spacing:.3px;
-  }
-  .shot:hover img{transform:scale(1.06); filter:saturate(1.1)}
-  .shot:hover::after{opacity:.9}
-
   .rules{counter-reset:r; display:grid; gap:12px}
   .rulegrid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px}
   .rcard{
@@ -267,12 +250,10 @@
     h1{font-size:46px}
     .grid3{grid-template-columns:1fr}
     .people{grid-template-columns:repeat(2,1fr)}
-    .gallery{grid-template-columns:repeat(2,1fr)}
     .nav-links{display:none}
   }
   @media (max-width:560px){
     .people{grid-template-columns:1fr}
-    .gallery{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -290,7 +271,6 @@
     <div class="nav-links">
       <a href="#about">О сервере</a>
       <a href="#people">Люди</a>
-      <a href="#gallery">Галерея</a>
       <a href="#rules">Правила</a>
       <a href="#channels">Каналы</a>
       <a href="https://att4cking-812.github.io/arcade/" target="_blank" rel="noopener">Поиграть</a>
@@ -317,7 +297,7 @@
     <div class="card">
       <h3>Сейчас на сервере</h3>
       <div class="stat"><span>Участников</span><b><span id="statMembers">29</span> <span id="statOnline" style="font-size:12px;color:#59f28f">11 online</span></b></div>
-      <div class="stat"><span>Голосовой канал</span><b style="color:#59f28f">● в Discord</b></div>
+      <div class="stat"><span>Голосовой канал</span><b style="color:#59f28f">● всегда</b></div>
       <div class="stat"><span>Оффлайн</span><b style="color:#a08fa8"><span id="statOffline">18</span></b></div>
       <div class="avatars">
         <div class="av">🍷</div>
@@ -386,23 +366,6 @@
       </div>
     </div>
     <div class="people-note">Полный список участников и роли видны в Discord — <a href="#" data-invite>заходи и знакомься</a>.</div>
-  </div>
-</section>
-
-<section id="gallery">
-  <div class="wrap">
-    <div class="shead">
-      <span>фотогалерея</span>
-      <h2>Мемы и моменты</h2>
-    </div>
-    <div class="gallery">
-      <a class="shot" href="https://att4cking-812.github.io/arcade/memes/dog.jpg" target="_blank" rel="noopener"><img src="https://att4cking-812.github.io/arcade/memes/dog.jpg" alt="Мем сервера" loading="lazy"><span>собака дня</span></a>
-      <a class="shot" href="https://att4cking-812.github.io/arcade/memes/pudge.png" target="_blank" rel="noopener"><img src="https://att4cking-812.github.io/arcade/memes/pudge.png" alt="Мем сервера" loading="lazy"><span>классика</span></a>
-      <a class="shot" href="https://att4cking-812.github.io/arcade/memes/kamina.png" target="_blank" rel="noopener"><img src="https://att4cking-812.github.io/arcade/memes/kamina.png" alt="Мем сервера" loading="lazy"><span>мотивация</span></a>
-      <a class="shot" href="https://att4cking-812.github.io/arcade/memes/kamina_v2.png" target="_blank" rel="noopener"><img src="https://att4cking-812.github.io/arcade/memes/kamina_v2.png" alt="Мем сервера" loading="lazy"><span>вторая серия</span></a>
-      <a class="shot" href="https://att4cking-812.github.io/arcade/memes/demon.png" target="_blank" rel="noopener"><img src="https://att4cking-812.github.io/arcade/memes/demon.png" alt="Мем сервера" loading="lazy"><span>ночной чат</span></a>
-      <a class="shot" href="https://att4cking-812.github.io/arcade/memes/lays.png" target="_blank" rel="noopener"><img src="https://att4cking-812.github.io/arcade/memes/lays.png" alt="Мем сервера" loading="lazy"><span>перекус</span></a>
-    </div>
   </div>
 </section>
 
@@ -559,7 +522,7 @@
   });
 
   // ---------- анимации появления ----------
-  const revealEls = Array.from(document.querySelectorAll('.shead, .feat, .person, .shot, .rcard, .chips, .join, .card, .rulefoot'));
+  const revealEls = Array.from(document.querySelectorAll('.shead, .feat, .person, .rcard, .chips, .join, .card, .rulefoot'));
   revealEls.forEach((el, i) => {
     el.classList.add('reveal');
     el.style.transitionDelay = `${(i % 5) * 70}ms`;
