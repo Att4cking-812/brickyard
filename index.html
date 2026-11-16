@@ -126,8 +126,7 @@
   .shead{margin-bottom:34px}
   .shead span{font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--wine2)}
   .shead h2{font-size:36px; margin-top:10px; letter-spacing:-.5px}
-  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
-  .feat{
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}  .feat{
     background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:24px;
     transition:.25s;
   }
@@ -138,8 +137,41 @@
   }
   .feat h3{font-size:17px; margin-bottom:8px}
   .feat p{color:var(--muted); font-size:14px; line-height:1.6}
-  a.feat{display:block; color:inherit; text-decoration:none}
-  .feat .go{display:inline-block; margin-top:14px; color:var(--wine2); font-size:13px; font-weight:600}
+
+  /* люди */
+  .people{display:grid; grid-template-columns:repeat(4,1fr); gap:16px}
+  .person{
+    background:linear-gradient(160deg,rgba(30,18,40,.8),rgba(14,9,20,.9));
+    border:1px solid var(--line); border-radius:20px; padding:22px 20px; transition:.2s;
+  }
+  .person:hover{transform:translateY(-4px); border-color:rgba(192,42,85,.45)}
+  .person-av{
+    width:48px; height:48px; border-radius:16px; display:grid; place-items:center; font-size:23px;
+    background:linear-gradient(145deg,#3a2346,#221530); border:1px solid var(--line); margin-bottom:14px;
+  }
+  .person h3{font-size:16px; margin-bottom:6px}
+  .person p{color:var(--muted); font-size:13px; line-height:1.55}
+  .person p b{color:var(--text)}
+  .people-note{margin-top:20px; color:var(--muted); font-size:13px}
+  .people-note a{color:var(--wine2); font-weight:700}
+  .people-note a:hover{color:var(--gold)}
+
+  /* галерея */
+  .gallery{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  .shot{
+    position:relative; display:block; aspect-ratio:1/1; overflow:hidden; border-radius:18px;
+    border:1px solid var(--line); background:#0d0813; cursor:zoom-in;
+  }
+  .shot img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .35s ease, filter .35s ease}
+  .shot::after{
+    content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 45%,rgba(10,7,16,.85));
+    opacity:.75; transition:opacity .25s ease;
+  }
+  .shot span{
+    position:absolute; left:16px; bottom:14px; z-index:1; font-size:13px; font-weight:700; letter-spacing:.3px;
+  }
+  .shot:hover img{transform:scale(1.06); filter:saturate(1.1)}
+  .shot:hover::after{opacity:.9}
 
   .rules{counter-reset:r; display:grid; gap:12px}
   .rulegrid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px}
@@ -234,7 +266,13 @@
     .hero{grid-template-columns:1fr; gap:34px}
     h1{font-size:46px}
     .grid3{grid-template-columns:1fr}
+    .people{grid-template-columns:repeat(2,1fr)}
+    .gallery{grid-template-columns:repeat(2,1fr)}
     .nav-links{display:none}
+  }
+  @media (max-width:560px){
+    .people{grid-template-columns:1fr}
+    .gallery{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -251,9 +289,11 @@
     </div>
     <div class="nav-links">
       <a href="#about">О сервере</a>
+      <a href="#people">Люди</a>
+      <a href="#gallery">Галерея</a>
       <a href="#rules">Правила</a>
       <a href="#channels">Каналы</a>
-      <a href="#arcade">Поиграть</a>
+      <a href="https://att4cking-812.github.io/arcade/" target="_blank" rel="noopener">Поиграть</a>
     </div>
     <a class="btn btn-main" href="#" data-invite>Присоединиться</a>
   </div>
@@ -277,7 +317,7 @@
     <div class="card">
       <h3>Сейчас на сервере</h3>
       <div class="stat"><span>Участников</span><b><span id="statMembers">29</span> <span id="statOnline" style="font-size:12px;color:#59f28f">11 online</span></b></div>
-      <div class="stat"><span>Голосовой канал</span><b style="color:#59f28f">● 24/7</b></div>
+      <div class="stat"><span>Голосовой канал</span><b style="color:#59f28f">● в Discord</b></div>
       <div class="stat"><span>Оффлайн</span><b style="color:#a08fa8"><span id="statOffline">18</span></b></div>
       <div class="avatars">
         <div class="av">🍷</div>
@@ -313,6 +353,55 @@
         <h3>Голос 24/7</h3>
         <p>Заходи в канал и просто сиди — кто-нибудь да подключится. Музыка, стримы и «AAAААА» в звуковой панели прилагаются.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="people">
+  <div class="wrap">
+    <div class="shead">
+      <span>свои люди</span>
+      <h2>Кто здесь живёт</h2>
+    </div>
+    <div class="people">
+      <div class="person">
+        <div class="person-av">🍷</div>
+        <h3>Основатель</h3>
+        <p>Держит сервер, придумывает движ и раздаёт вайб. Все вопросы — к нему.</p>
+      </div>
+      <div class="person">
+        <div class="person-av">🛡</div>
+        <h3>Администрация</h3>
+        <p>Следит за порядком, решает споры и запускает ивенты.</p>
+      </div>
+      <div class="person">
+        <div class="person-av">🧹</div>
+        <h3>Модерация</h3>
+        <p>Чистит чаты, смотрит жалобы, помогает новичкам освоиться.</p>
+      </div>
+      <div class="person">
+        <div class="person-av">🎮</div>
+        <h3>Жители</h3>
+        <p><b id="peopleMembers">29</b> участников — от завсегдатаев голосового до тех, кто приходит на мемы.</p>
+      </div>
+    </div>
+    <div class="people-note">Полный список участников и роли видны в Discord — <a href="#" data-invite>заходи и знакомься</a>.</div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <div class="shead">
+      <span>фотогалерея</span>
+      <h2>Мемы и моменты</h2>
+    </div>
+    <div class="gallery">
+      <a class="shot" href="https://att4cking-812.github.io/arcade/memes/dog.jpg" target="_blank" rel="noopener"><img src="https://att4cking-812.github.io/arcade/memes/dog.jpg" alt="Мем сервера" loading="lazy"><span>собака дня</span></a>
+      <a class="shot" href="https://att4cking-812.github.io/arcade/memes/pudge.png" target="_blank" rel="noopener"><img src="https://att4cking-812.github.io/arcade/memes/pudge.png" alt="Мем сервера" loading="lazy"><span>классика</span></a>
+      <a class="shot" href="https://att4cking-812.github.io/arcade/memes/kamina.png" target="_blank" rel="noopener"><img src="https://att4cking-812.github.io/arcade/memes/kamina.png" alt="Мем сервера" loading="lazy"><span>мотивация</span></a>
+      <a class="shot" href="https://att4cking-812.github.io/arcade/memes/kamina_v2.png" target="_blank" rel="noopener"><img src="https://att4cking-812.github.io/arcade/memes/kamina_v2.png" alt="Мем сервера" loading="lazy"><span>вторая серия</span></a>
+      <a class="shot" href="https://att4cking-812.github.io/arcade/memes/demon.png" target="_blank" rel="noopener"><img src="https://att4cking-812.github.io/arcade/memes/demon.png" alt="Мем сервера" loading="lazy"><span>ночной чат</span></a>
+      <a class="shot" href="https://att4cking-812.github.io/arcade/memes/lays.png" target="_blank" rel="noopener"><img src="https://att4cking-812.github.io/arcade/memes/lays.png" alt="Мем сервера" loading="lazy"><span>перекус</span></a>
     </div>
   </div>
 </section>
@@ -361,35 +450,6 @@
   </div>
 </section>
 
-<section id="arcade">
-  <div class="wrap">
-    <div class="shead">
-      <span>поиграть</span>
-      <h2>Аркада Brickyard</h2>
-    </div>
-    <div class="grid3">
-      <a class="feat" href="https://att4cking-812.github.io/arcade/" target="_blank" rel="noopener">
-        <div class="ico">🕹</div>
-        <h3>Шесть игр в браузере</h3>
-        <p>Змейка, сапёр, 2048, виселица, тетрис и морской бой. Без установки и регистрации — открыл и играешь.</p>
-        <span class="go">Играть →</span>
-      </a>
-      <a class="feat" href="https://att4cking-812.github.io/arcade/profile.html" target="_blank" rel="noopener">
-        <div class="ico">🏆</div>
-        <h3>Профиль и достижения</h3>
-        <p>Ник, уровень, личные рекорды и 17 значков. Общая онлайн-таблица показывает лучших с любого устройства.</p>
-        <span class="go">Открыть профиль →</span>
-      </a>
-      <a class="feat" href="https://att4cking-812.github.io/arcade/quest.html" target="_blank" rel="noopener">
-        <div class="ico">📖</div>
-        <h3>Квест «Пропавший вайб»</h3>
-        <p>Интерактивная история сервера: выборы, статы и шесть концовок. Проходится за один вечер.</p>
-        <span class="go">Начать историю →</span>
-      </a>
-    </div>
-  </div>
-</section>
-
 <section>
   <div class="wrap">
     <div class="join">
@@ -403,7 +463,7 @@
 <footer>
   <div class="wrap foot">
     <div id="arcadeTrigger">© Brickyard · сделано с 🍷 и небольшим количеством кода</div>
-    <div>Discord · Minecraft · <a href="https://att4cking-812.github.io/arcade/" target="_blank" rel="noopener">аркада</a> · <a href="https://att4cking-812.github.io/arcade/thanks.html" target="_blank" rel="noopener">спасибо</a></div>
+    <div>Discord · Minecraft · <a href="https://att4cking-812.github.io/arcade/thanks.html" target="_blank" rel="noopener">спасибо</a></div>
   </div>
 </footer>
 
@@ -499,7 +559,7 @@
   });
 
   // ---------- анимации появления ----------
-  const revealEls = Array.from(document.querySelectorAll('.shead, .feat, .rcard, .chips, .join, .card, .rulefoot'));
+  const revealEls = Array.from(document.querySelectorAll('.shead, .feat, .person, .shot, .rcard, .chips, .join, .card, .rulefoot'));
   revealEls.forEach((el, i) => {
     el.classList.add('reveal');
     el.style.transitionDelay = `${(i % 5) * 70}ms`;
@@ -529,41 +589,29 @@
   }
 
   // ---------- живые статы Discord ----------
-  // Discord-инвайт считает и ботов, поэтому вычитаем нашего бота из итогов.
-  const BOT_COUNT = 1;
   (async () => {
     const note = document.getElementById('statsNote');
-    const set = (id, value) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = value;
-    };
-
-    const update = async () => {
-      try {
-        const code = INVITE.split('/').pop();
-        const res = await fetch(`https://discord.com/api/v10/invites/${code}?with_counts=true`, { cache: 'no-store' });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-        const totalRaw = Number(data.approximate_member_count) || 0;
-        const onlineRaw = Number(data.approximate_presence_count) || 0;
-        const members = Math.max(0, totalRaw - BOT_COUNT);
-        const online = Math.min(members, Math.max(0, onlineRaw - BOT_COUNT));
-        const offline = Math.max(0, members - online);
-        set('statMembers', members);
-        set('statOnline', online + ' online');
-        set('statOffline', offline);
-        set('statMore', '+' + Math.max(0, members - 4));
-        if (note) {
-          const t = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-          note.textContent = 'данные Discord без ботов · обновлено в ' + t;
-        }
-      } catch (e) {
-        if (note) note.textContent = 'данные на 14.11.2026';
-      }
-    };
-
-    update();
-    setInterval(update, 300000);
+    try {
+      const code = INVITE.split('/').pop();
+      const res = await fetch(`https://discord.com/api/v10/invites/${code}?with_counts=true`, { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const members = Number(data.approximate_member_count) || 0;
+      const online = Number(data.approximate_presence_count) || 0;
+      const offline = Math.max(0, members - online);
+      const set = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+      set('statMembers', members);
+      set('peopleMembers', members);
+      set('statOnline', online + ' online');
+      set('statOffline', offline);
+      set('statMore', '+' + Math.max(0, members - 4));
+      if (note) note.textContent = 'данные Discord · обновляются автоматически';
+    } catch (e) {
+      if (note) note.textContent = 'данные на 14.11.2026';
+    }
   })();
 </script>
 </body>
